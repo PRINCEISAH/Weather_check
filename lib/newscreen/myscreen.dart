@@ -11,139 +11,157 @@ class Screen extends StatefulWidget {
 }
 
 class _ScreenState extends State<Screen> {
-  var temprature;
-  var pressure;
-  var humidity;
-  var temhight;
-  var tempLow;
-  var loacationname;
+  var bool = false;
 
-  var respond, data, url;
-
-  Future<void> getAPI() async {
-    url = "http://www.json-generator.com/api/json/get/bVJPfcEkoi?indent=2";
-
-    respond = await http.get(url);
-    data = jsonDecode(respond.body);
-
-    Weather weather = Weather.formJson(data);
-    print(weather.temprature);
+  Future<Weather> GetApi(String location) async {
+    var url =
+        'http://api.openweathermap.org/data/2.5/weather?q=$location&units=metric&APPID=0c1b6d71bec35b22e23b31daa3645823';
+    var data;
+    var responds = await http.get(url);
+    if (responds.statusCode == 200) {
+      print("succesfully fetch");
+      data = jsonDecode(responds.body);
+      print(data['main']);
+    }
   }
 
-  @override
-  void initState() {
-    getAPI();
-    // TODO: implement initState
-    super.initState();
-  }
-
+  var cityname;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return SingleChildScrollView(
+    return Material(
       child: Container(
         height: size.height,
         width: size.width,
-        child: Column(
-          children: <Widget>[
+        child: Stack(
+          children: [
             Container(
-              height: 300,
+              height: size.height * 0.3,
               width: size.width,
               decoration: BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage('images/image.png'),
                       fit: BoxFit.cover)),
               child: Center(
-                child: Container(
-                  color: Colors.white,
-                  width: 200,
-                  child: TextField(
-                    decoration: InputDecoration(
-                        hintText: "Location",
-                        enabledBorder: OutlineInputBorder()),
-                    onSubmitted: (value) {},
-                  ),
+                child: Row(
+                  children: [
+                    Container(
+                      color: Colors.white,
+                      width: 200,
+                      child: TextField(
+                        onSubmitted: (value) {
+                          setState(() {
+                            cityname = value;
+                          });
+                        },
+                        decoration: InputDecoration(
+                            hintText: "Location",
+                            enabledBorder: OutlineInputBorder()),
+                      ),
+                    ),
+                    RaisedButton(
+                      onPressed: () {
+                        GetApi(cityname);
+                      },
+                      child: Text("check"),
+                    )
+                  ],
                 ),
               ),
             ),
-            Container(
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(20)),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        child: Text(
-                          "Sunday 19 May 2019",
-                          style:
-                              TextStyle(fontSize: 14, color: Color(0xff999999)),
-                        ),
-                      ),
-                      Spacer(),
-                      Container(
-                        height: 48,
-                        width: 154,
-                        decoration: BoxDecoration(
-                            color: Color(0xfff0D9FEA),
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(40),
-                            )),
-                        child: Center(child: Text('$loacationname')),
-                      )
-                    ],
+            Positioned(
+              bottom: 30,
+              child: Container(
+                height: size.height * 0.7,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.pink,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(40),
+                    topLeft: Radius.circular(40),
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 45, vertical: 40),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Row(
                       children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            SvgPicture.asset("images/cloud.svg"),
-                            Text("Sunny")
-                          ],
-                        ),
-                        Text(
-                          "$temprature°C",
-                          style: TextStyle(
-                            fontSize: 64,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Container(
+                            child: Text(
+                              "Sunday 19 May 2019",
+                              style: TextStyle(
+                                  fontSize: 14, color: Color(0xff999999)),
+                            ),
                           ),
                         ),
-                        Row(
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[Text('35°C'), Text('27°C')],
-                            )
-                          ],
+                        Spacer(),
+                        Container(
+                          height: 48,
+                          width: 154,
+                          decoration: BoxDecoration(
+                              color: Color(0xff0D9FEA),
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(40),
+                                  topRight: Radius.circular(40))),
+                          child: Center(child: Text('')),
                         )
                       ],
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 45, vertical: 40),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Tempcard(
-                          imgurl: "images/humidity.svg",
-                          type: "Humidity",
-                          valuee: "humidity",
-                        ),
-                        Tempcard(
-                          imgurl: "images/presure.svg",
-                          type: "pressure",
-                          valuee: "1,007",
-                        ),
-                        Tempcard(
-                          imgurl: 'images/wind.svg',
-                          type: "wind",
-                          valuee: "23",
-                        )
-                      ],
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 45, vertical: 40),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column(
+                            children: <Widget>[
+                              SvgPicture.asset("images/cloud.svg"),
+                              Text("Sunny")
+                            ],
+                          ),
+                          Text(
+                            "°C",
+                            style: TextStyle(
+                              fontSize: 64,
+                            ),
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Column(
+                                children: <Widget>[Text('35°C'), Text('27°C')],
+                              )
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  )
-                ],
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 45, vertical: 40),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Tempcard(
+                            imgurl: "images/humidity.svg",
+                            type: "Humidity",
+                            valuee: "humidity",
+                          ),
+                          Tempcard(
+                            imgurl: "images/presure.svg",
+                            type: "pressure",
+                            valuee: "1,007",
+                          ),
+                          Tempcard(
+                            imgurl: 'images/wind.svg',
+                            type: "wind",
+                            valuee: "23",
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             )
           ],
