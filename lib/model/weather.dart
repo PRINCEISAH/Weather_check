@@ -1,9 +1,9 @@
 class Weather {
-  final String temprature;
-  final String pressure;
-  final String humidity;
-  final String temhight;
-  final String tempLow;
+  final int temprature;
+  final int pressure;
+  final int humidity;
+  final int temhight;
+  final int tempLow;
 
   Weather(
       {this.temprature,

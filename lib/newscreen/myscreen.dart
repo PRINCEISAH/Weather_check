@@ -11,7 +11,11 @@ class Screen extends StatefulWidget {
 }
 
 class _ScreenState extends State<Screen> {
-  var bool = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   Future<Weather> GetApi(String location) async {
     var url =
@@ -23,9 +27,13 @@ class _ScreenState extends State<Screen> {
       data = jsonDecode(responds.body);
       print(data['main']);
     }
+    Weather lokoja = Weather.formJson(data['main']);
+    print(lokoja);
+    return Weather.formJson(data['main']);
   }
 
-  var cityname;
+  Weather weather;
+  var cityname = null ?? "lagos";
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -33,10 +41,10 @@ class _ScreenState extends State<Screen> {
       child: Container(
         height: size.height,
         width: size.width,
-        child: Stack(
-          children: [
+        child: Column(
+          children: <Widget>[
             Container(
-              height: size.height * 0.3,
+              height: 300,
               width: size.width,
               decoration: BoxDecoration(
                   image: DecorationImage(
@@ -49,14 +57,14 @@ class _ScreenState extends State<Screen> {
                       color: Colors.white,
                       width: 200,
                       child: TextField(
-                        onSubmitted: (value) {
+                        decoration: InputDecoration(
+                            hintText: "Location",
+                            enabledBorder: OutlineInputBorder()),
+                        onChanged: (value) {
                           setState(() {
                             cityname = value;
                           });
                         },
-                        decoration: InputDecoration(
-                            hintText: "Location",
-                            enabledBorder: OutlineInputBorder()),
                       ),
                     ),
                     RaisedButton(
@@ -69,99 +77,89 @@ class _ScreenState extends State<Screen> {
                 ),
               ),
             ),
-            Positioned(
-              bottom: 30,
-              child: Container(
-                height: size.height * 0.7,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.pink,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(40),
-                    topLeft: Radius.circular(40),
-                  ),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+//                  color: Colors.green,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(40),
                 ),
-                child: Column(
-                  children: <Widget>[
-                    Row(
+              ),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        child: Text(
+                          "Sunday 19 May 2019",
+                          style:
+                              TextStyle(fontSize: 14, color: Color(0xff999999)),
+                        ),
+                      ),
+                      Spacer(),
+                      Container(
+                        height: 48,
+                        width: 154,
+                        decoration: BoxDecoration(
+                            color: Color(0xff0D9FEA),
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(40),
+                                topRight: Radius.circular(40))),
+                        child: Center(child: Text('')),
+                      )
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 45, vertical: 40),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Container(
-                            child: Text(
-                              "Sunday 19 May 2019",
-                              style: TextStyle(
-                                  fontSize: 14, color: Color(0xff999999)),
-                            ),
+                        Column(
+                          children: <Widget>[
+                            SvgPicture.asset("images/cloud.svg"),
+                            Text("Sunny")
+                          ],
+                        ),
+                        Text(
+                          "°C",
+                          style: TextStyle(
+                            fontSize: 64,
                           ),
                         ),
-                        Spacer(),
-                        Container(
-                          height: 48,
-                          width: 154,
-                          decoration: BoxDecoration(
-                              color: Color(0xff0D9FEA),
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(40),
-                                  topRight: Radius.circular(40))),
-                          child: Center(child: Text('')),
+                        Row(
+                          children: <Widget>[
+                            Column(
+                              children: <Widget>[Text('35°C'), Text('27°C')],
+                            )
+                          ],
                         )
                       ],
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 45, vertical: 40),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              SvgPicture.asset("images/cloud.svg"),
-                              Text("Sunny")
-                            ],
-                          ),
-                          Text(
-                            "°C",
-                            style: TextStyle(
-                              fontSize: 64,
-                            ),
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Column(
-                                children: <Widget>[Text('35°C'), Text('27°C')],
-                              )
-                            ],
-                          )
-                        ],
-                      ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 45, vertical: 40),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Tempcard(
+                          imgurl: "images/humidity.svg",
+                          type: "Humidity",
+                          valuee: "humidity",
+                        ),
+                        Tempcard(
+                          imgurl: "images/presure.svg",
+                          type: "pressure",
+                          valuee: "1,007",
+                        ),
+                        Tempcard(
+                          imgurl: 'images/wind.svg',
+                          type: "wind",
+                          valuee: "23",
+                        )
+                      ],
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 45, vertical: 40),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Tempcard(
-                            imgurl: "images/humidity.svg",
-                            type: "Humidity",
-                            valuee: "humidity",
-                          ),
-                          Tempcard(
-                            imgurl: "images/presure.svg",
-                            type: "pressure",
-                            valuee: "1,007",
-                          ),
-                          Tempcard(
-                            imgurl: 'images/wind.svg',
-                            type: "wind",
-                            valuee: "23",
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
             )
           ],
