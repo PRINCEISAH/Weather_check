@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:weather/ViewModel/view.dart';
-import 'package:weather/model/weather.dart';
 
 class Screen extends StatefulWidget {
   @override
@@ -15,23 +11,7 @@ class Screen extends StatefulWidget {
 class _ScreenState extends State<Screen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-  }
-
-  Future<Weather> GetApi(String location) async {
-    var url =
-        'http://api.openweathermap.org/data/2.5/weather?q=$location&units=metric&APPID=0c1b6d71bec35b22e23b31daa3645823';
-    var data;
-    var responds = await http.get(url);
-    if (responds.statusCode == 200) {
-      print("succesfully fetch");
-      data = jsonDecode(responds.body);
-      print(data['main']);
-    }
-    Weather lokoja = Weather.formJson(data['main']);
-    print(lokoja);
-    return Weather.formJson(data['main']);
   }
 
   var cityname = null ?? "lagos";
@@ -52,10 +32,13 @@ class _ScreenState extends State<Screen> {
                   image: DecorationImage(
                       image: AssetImage('images/image.png'),
                       fit: BoxFit.cover)),
-              child: Center(
-                child: Column(
-                  children: [
-                    Row(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 70,
+                  ),
+                  Center(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
@@ -81,11 +64,11 @@ class _ScreenState extends State<Screen> {
                         )
                       ],
                     ),
-                    weatherprovider.isloading == true
-                        ? CircularProgressIndicator()
-                        : Container()
-                  ],
-                ),
+                  ),
+                  weatherprovider.iisloading == false
+                      ? Container()
+                      : CircularProgressIndicator()
+                ],
               ),
             ),
             Container(
@@ -133,7 +116,7 @@ class _ScreenState extends State<Screen> {
                           ],
                         ),
                         Text(
-                          "${weatherprovider.Weathertemprature}°C",
+                          "${weatherprovider.temp}°C",
                           style: TextStyle(
                             fontSize: 64,
                           ),

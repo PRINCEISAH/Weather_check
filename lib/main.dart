@@ -31,6 +31,8 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final weatherprovider = Provider.of<WeatherViewModel>(context);
+
     return SafeArea(
       child: Scaffold(
         body: Screen(),

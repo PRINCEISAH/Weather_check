@@ -6,15 +6,17 @@ import 'package:weather/model/weather.dart';
 
 class WeatherViewModel extends ChangeNotifier {
   Weather _weather;
-  get Weathertemprature => _weather.temprature;
 
+  num temp = null ?? 0;
+
+  get temptrature => temp.toString();
   bool isloading = false;
+  get iisloading => isloading;
   get CityyName => _cityname;
 
   var _cityname;
+
   void GetApi(String location) async {
-    isloading = true;
-    var city;
     var url =
         'http://api.openweathermap.org/data/2.5/weather?q=$location&units=metric&APPID=0c1b6d71bec35b22e23b31daa3645823';
     var data;
@@ -24,10 +26,11 @@ class WeatherViewModel extends ChangeNotifier {
       print("succesfully fetch");
       data = jsonDecode(responds.body);
       print(data['main']);
-    }
+    } else
+      isloading = false;
     _cityname = data['name'];
-
     _weather = Weather.formJson(data['main']);
+    temp = _weather.temprature;
     notifyListeners();
   }
 }
