@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:weather/ViewModel/view.dart';
 import 'package:weather/model/weather.dart';
 
 class Screen extends StatefulWidget {
@@ -32,10 +34,10 @@ class _ScreenState extends State<Screen> {
     return Weather.formJson(data['main']);
   }
 
-  Weather weather;
   var cityname = null ?? "lagos";
   @override
   Widget build(BuildContext context) {
+    final weatherprovider = Provider.of<WeatherViewModel>(context);
     Size size = MediaQuery.of(context).size;
     return Material(
       child: Container(
@@ -51,28 +53,37 @@ class _ScreenState extends State<Screen> {
                       image: AssetImage('images/image.png'),
                       fit: BoxFit.cover)),
               child: Center(
-                child: Row(
+                child: Column(
                   children: [
-                    Container(
-                      color: Colors.white,
-                      width: 200,
-                      child: TextField(
-                        decoration: InputDecoration(
-                            hintText: "Location",
-                            enabledBorder: OutlineInputBorder()),
-                        onChanged: (value) {
-                          setState(() {
-                            cityname = value;
-                          });
-                        },
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          color: Colors.white,
+                          width: 200,
+                          child: TextField(
+                            decoration: InputDecoration(
+                                hintText: "Location",
+                                enabledBorder: OutlineInputBorder()),
+                            onChanged: (value) {
+                              setState(() {
+                                cityname = value;
+                              });
+                            },
+                          ),
+                        ),
+                        RaisedButton(
+                          onPressed: () {
+                            weatherprovider.GetApi(cityname);
+                            print("check");
+                          },
+                          child: Text("check"),
+                        )
+                      ],
                     ),
-                    RaisedButton(
-                      onPressed: () {
-                        GetApi(cityname);
-                      },
-                      child: Text("check"),
-                    )
+                    weatherprovider.isloading == true
+                        ? CircularProgressIndicator()
+                        : Container()
                   ],
                 ),
               ),
@@ -105,7 +116,8 @@ class _ScreenState extends State<Screen> {
                             borderRadius: BorderRadius.only(
                                 bottomLeft: Radius.circular(40),
                                 topRight: Radius.circular(40))),
-                        child: Center(child: Text('')),
+                        child:
+                            Center(child: Text('${weatherprovider.CityyName}')),
                       )
                     ],
                   ),
@@ -121,7 +133,7 @@ class _ScreenState extends State<Screen> {
                           ],
                         ),
                         Text(
-                          "°C",
+                          "${weatherprovider.Weathertemprature}°C",
                           style: TextStyle(
                             fontSize: 64,
                           ),
