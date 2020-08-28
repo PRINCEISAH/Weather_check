@@ -1,36 +1,36 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
+import 'package:weather/Service/Api_service.dart';
 import 'package:weather/model/weather.dart';
+import 'package:weather/service_locator.dart';
 
 class WeatherViewModel extends ChangeNotifier {
   Weather _weather;
 
-  num temp = null ?? 0;
+  num _temprature = null ?? 0;
+  String _cityName = "";
+  String _cloudStatus = null ?? '';
+  num _setTempMax = null ?? 0;
+  num _setTempMin = null ?? 0;
 
-  get temptrature => temp.toString();
-  bool isloading = false;
-  get iisloading => isloading;
-  get CityyName => _cityname;
-
-  var _cityname;
-
-  void GetApi(String location) async {
-    var url =
-        'http://api.openweathermap.org/data/2.5/weather?q=$location&units=metric&APPID=0c1b6d71bec35b22e23b31daa3645823';
-    var data;
-    var responds = await http.get(url);
-    if (responds.statusCode == 200) {
-      isloading = false;
-      print("succesfully fetch");
-      data = jsonDecode(responds.body);
-      print(data['main']);
+  get getcloudstatus => _cloudStatus;
+  get Temprature => _temprature.toInt();
+  get cityName => _cityName;
+  get temMin => _weather.tempMin.toInt();
+  get getTempMax => _setTempMax.toInt();
+  get getTempMin => _setTempMin.round();
+  final _api = locator<WeatherApi>();
+  Weather get weather => _weather;
+  Future getWeather(String location) async {
+    var weatherApiREQ = await _api.GetApi(location);
+    if (weatherApiREQ is String) {
+      throw Exception("error try again");
     } else
-      isloading = false;
-    _cityname = data['name'];
-    _weather = Weather.formJson(data['main']);
-    temp = _weather.temprature;
+      _weather = Weather.formJson(weatherApiREQ['main']);
+    _cityName = weatherApiREQ['name'];
+    _temprature = _weather.temprature;
+    _setTempMax = _weather.temMax;
+    _setTempMin = _weather.tempMin;
+    _cloudStatus = weatherApiREQ['coord']['Ion'];
     notifyListeners();
   }
 }

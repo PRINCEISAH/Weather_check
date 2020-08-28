@@ -57,7 +57,7 @@ class _ScreenState extends State<Screen> {
                         ),
                         RaisedButton(
                           onPressed: () {
-                            weatherprovider.GetApi(cityname);
+                            weatherprovider.getWeather(cityname);
                             print("check");
                           },
                           child: Text("check"),
@@ -65,9 +65,6 @@ class _ScreenState extends State<Screen> {
                       ],
                     ),
                   ),
-                  weatherprovider.iisloading == false
-                      ? Container()
-                      : CircularProgressIndicator()
                 ],
               ),
             ),
@@ -91,16 +88,20 @@ class _ScreenState extends State<Screen> {
                         ),
                       ),
                       Spacer(),
-                      Container(
-                        height: 48,
-                        width: 154,
-                        decoration: BoxDecoration(
-                            color: Color(0xff0D9FEA),
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(40),
-                                topRight: Radius.circular(40))),
-                        child:
-                            Center(child: Text('${weatherprovider.CityyName}')),
+                      InkWell(
+                        onTap: () {
+                          print(weatherprovider.weather.temprature);
+                        },
+                        child: Container(
+                          height: 48,
+                          width: 154,
+                          decoration: BoxDecoration(
+                              color: Color(0xff0D9FEA),
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(40),
+                                  topRight: Radius.circular(40))),
+                          child: Center(child: Text("")),
+                        ),
                       )
                     ],
                   ),
@@ -112,11 +113,11 @@ class _ScreenState extends State<Screen> {
                         Column(
                           children: <Widget>[
                             SvgPicture.asset("images/cloud.svg"),
-                            Text("Sunny")
+                            Text("${weatherprovider.getcloudstatus}")
                           ],
                         ),
                         Text(
-                          "${weatherprovider.temp}°C",
+                          "${weatherprovider.Temprature}°C",
                           style: TextStyle(
                             fontSize: 64,
                           ),
@@ -124,7 +125,10 @@ class _ScreenState extends State<Screen> {
                         Row(
                           children: <Widget>[
                             Column(
-                              children: <Widget>[Text('35°C'), Text('27°C')],
+                              children: <Widget>[
+                                Text('${weatherprovider.getTempMax}°C'),
+                                Text('${weatherprovider.getTempMin}°C')
+                              ],
                             )
                           ],
                         )

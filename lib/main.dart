@@ -7,8 +7,10 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:weather/ViewModel/view.dart';
 import 'package:weather/newscreen/myscreen.dart';
+import 'package:weather/service_locator.dart';
 
 void main() {
+  setuplocator();
   runApp(MyApp());
 }
 

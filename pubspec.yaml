@@ -18,11 +18,13 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.9.0 <3.0.0"
 
 dependencies:
-  http: ^0.12.1
-  flutter_svg: any
+  get_it: 4.0.4
+  http: any
+  flutter_svg: ^0.18.1
+  provider: 4.3.2+1
   flutter:
     sdk: flutter
 
