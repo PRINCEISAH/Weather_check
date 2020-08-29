@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:http/http.dart' as http;
-import 'package:weather/model/weather.dart';
+import 'package:provider/provider.dart';
+import 'package:weather/ViewModel/view.dart';
 
 class Screen extends StatefulWidget {
   @override
@@ -11,36 +9,17 @@ class Screen extends StatefulWidget {
 }
 
 class _ScreenState extends State<Screen> {
-  var temprature;
-  var pressure;
-  var humidity;
-  var temhight;
-  var tempLow;
-  var loacationname;
-
-  var respond, data, url;
-
-  Future<void> getAPI() async {
-    url = "http://www.json-generator.com/api/json/get/bVJPfcEkoi?indent=2";
-
-    respond = await http.get(url);
-    data = jsonDecode(respond.body);
-
-    Weather weather = Weather.formJson(data);
-    print(weather.temprature);
-  }
-
   @override
   void initState() {
-    getAPI();
-    // TODO: implement initState
     super.initState();
   }
 
+  var cityname = null ?? "lagos";
   @override
   Widget build(BuildContext context) {
+    final weatherprovider = Provider.of<WeatherViewModel>(context);
     Size size = MediaQuery.of(context).size;
-    return SingleChildScrollView(
+    return Material(
       child: Container(
         height: size.height,
         width: size.width,
@@ -53,22 +32,50 @@ class _ScreenState extends State<Screen> {
                   image: DecorationImage(
                       image: AssetImage('images/image.png'),
                       fit: BoxFit.cover)),
-              child: Center(
-                child: Container(
-                  color: Colors.white,
-                  width: 200,
-                  child: TextField(
-                    decoration: InputDecoration(
-                        hintText: "Location",
-                        enabledBorder: OutlineInputBorder()),
-                    onSubmitted: (value) {},
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 70,
                   ),
-                ),
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          color: Colors.white,
+                          width: 200,
+                          child: TextField(
+                            decoration: InputDecoration(
+                                hintText: "Location",
+                                enabledBorder: OutlineInputBorder()),
+                            onChanged: (value) {
+                              setState(() {
+                                cityname = value;
+                              });
+                            },
+                          ),
+                        ),
+                        RaisedButton(
+                          onPressed: () {
+                            weatherprovider.getWeather(cityname);
+                            print("check");
+                          },
+                          child: Text("check"),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
             Container(
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(20)),
+              width: double.infinity,
+              decoration: BoxDecoration(
+//                  color: Colors.green,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(40),
+                ),
+              ),
               child: Column(
                 children: <Widget>[
                   Row(
@@ -81,15 +88,20 @@ class _ScreenState extends State<Screen> {
                         ),
                       ),
                       Spacer(),
-                      Container(
-                        height: 48,
-                        width: 154,
-                        decoration: BoxDecoration(
-                            color: Color(0xfff0D9FEA),
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(40),
-                            )),
-                        child: Center(child: Text('$loacationname')),
+                      InkWell(
+                        onTap: () {
+                          print(weatherprovider.weather.temprature);
+                        },
+                        child: Container(
+                          height: 48,
+                          width: 154,
+                          decoration: BoxDecoration(
+                              color: Color(0xff0D9FEA),
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(40),
+                                  topRight: Radius.circular(40))),
+                          child: Center(child: Text("")),
+                        ),
                       )
                     ],
                   ),
@@ -101,11 +113,11 @@ class _ScreenState extends State<Screen> {
                         Column(
                           children: <Widget>[
                             SvgPicture.asset("images/cloud.svg"),
-                            Text("Sunny")
+                            Text("${weatherprovider.getcloudstatus}")
                           ],
                         ),
                         Text(
-                          "$temprature°C",
+                          "${weatherprovider.Temprature}°C",
                           style: TextStyle(
                             fontSize: 64,
                           ),
@@ -113,7 +125,10 @@ class _ScreenState extends State<Screen> {
                         Row(
                           children: <Widget>[
                             Column(
-                              children: <Widget>[Text('35°C'), Text('27°C')],
+                              children: <Widget>[
+                                Text('${weatherprovider.getTempMax}°C'),
+                                Text('${weatherprovider.getTempMin}°C')
+                              ],
                             )
                           ],
                         )

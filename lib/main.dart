@@ -4,9 +4,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:weather/ViewModel/view.dart';
 import 'package:weather/newscreen/myscreen.dart';
+import 'package:weather/service_locator.dart';
 
 void main() {
+  setuplocator();
   runApp(MyApp());
 }
 
@@ -14,11 +18,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(),
-      home: Screen(),
+    return ChangeNotifierProvider(
+      create: (context) => WeatherViewModel(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(),
+        home: Screen(),
+      ),
     );
   }
 }
@@ -26,6 +33,8 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final weatherprovider = Provider.of<WeatherViewModel>(context);
+
     return SafeArea(
       child: Scaffold(
         body: Screen(),

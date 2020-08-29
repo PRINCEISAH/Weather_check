@@ -1,24 +1,24 @@
 class Weather {
-  final String temprature;
-  final String pressure;
-  final String humidity;
-  final String temhight;
-  final String tempLow;
+  final num temprature;
+  final num pressure;
+  final num humidity;
+  final num temMax;
+  final num tempMin;
 
   Weather(
       {this.temprature,
       this.pressure,
       this.humidity,
-      this.temhight,
-      this.tempLow});
+      this.temMax,
+      this.tempMin});
 
   factory Weather.formJson(Map<String, dynamic> json) {
     return Weather(
       temprature: json['temp'],
       pressure: json['pressure'],
       humidity: json['humidity'],
-      temhight: json['tem_min'],
-      tempLow: json['tem_max'],
+      temMax: json['temp_max'],
+      tempMin: json['temp_min'],
     );
   }
 }
