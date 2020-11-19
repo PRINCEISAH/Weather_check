@@ -18,6 +18,7 @@ class WeatherViewModel extends ChangeNotifier {
   get temMin => _weather.tempMin.toInt();
   get getTempMax => _setTempMax.toInt();
   get getTempMin => _setTempMin.round();
+
   final _api = locator<WeatherApi>();
   Weather get weather => _weather;
   Future getWeather(String location) async {

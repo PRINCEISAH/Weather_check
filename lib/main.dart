@@ -2,12 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:weather/ViewModel/view.dart';
+import 'package:weather/bloc/Weather_bloc.dart';
+import 'package:weather/bloc/weather_state.dart';
 import 'package:weather/newscreen/myscreen.dart';
 import 'package:weather/service_locator.dart';
+import 'package:weather/ui/HomeScreen.dart';
 
 void main() {
   setuplocator();
@@ -24,7 +28,10 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(),
-        home: Screen(),
+        home: BlocProvider(
+          create: (context) => WeatherBloc(),
+          child: MyHomeScreen(),
+        ),
       ),
     );
   }
