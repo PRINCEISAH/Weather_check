@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:weather/model/weather.dart';
 import 'package:weather/model/weather_model.dart';
 
 abstract class WeatherState extends Equatable {}
@@ -33,15 +32,6 @@ class WeatherIsLoadedState extends WeatherState {
 }
 
 class WeatherError extends WeatherState {
-  @override
-  // TODO: implement props
-  List<Object> get props => throw UnimplementedError();
-}
-
-class WeatherInputcity extends WeatherState {
-  final String City;
-
-  WeatherInputcity(this.City);
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();

@@ -16,3 +16,9 @@ class WeatherErrorRetryEvent extends WeatherEvent {
   // TODO: implement props
   List<Object> get props => [];
 }
+
+class EnterWeatherCityEvent extends WeatherEvent {
+  @override
+  // TODO: implement props
+  List<Object> get props => throw UnimplementedError();
+}

@@ -82,8 +82,8 @@ class WeatherFullModel {
 }
 
 class Coord {
-  double lon;
-  double lat;
+  num lon;
+  num lat;
 
   Coord({this.lon, this.lat});
 
@@ -130,8 +130,8 @@ class Main {
   num feelsLike;
   num tempMin;
   num tempMax;
-  int pressure;
-  int humidity;
+  num pressure;
+  num humidity;
 
   Main(
       {this.temp,
@@ -200,7 +200,7 @@ class Clouds {
 class Sys {
   int type;
   int id;
-  double message;
+  num message;
   String country;
   int sunrise;
   int sunset;
